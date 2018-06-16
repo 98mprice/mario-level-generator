@@ -44,7 +44,7 @@ diversity = 0.2
 maxlen = 40
 model = load_model('model.keras')
 generated = ''
-seed = "...........\n==............\n==k.........."
+seed = "==............\n==............\n==............\n"
 generated += seed
 print('----- Generating with seed: "' + seed + '"')
 sys.stdout.write(generated)

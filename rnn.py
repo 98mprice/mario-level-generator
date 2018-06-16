@@ -13,7 +13,7 @@ has at least ~100k characters. ~1M is better.
 from __future__ import print_function
 from keras.callbacks import LambdaCallback
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 from keras.layers import LSTM
 from keras.optimizers import RMSprop
 from keras.utils.data_utils import get_file
@@ -32,7 +32,7 @@ char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 
 # cut the text in semi-redundant sequences of maxlen characters
-maxlen = 40
+maxlen = 50
 step = 3
 sentences = []
 next_chars = []
@@ -54,10 +54,11 @@ for i, sentence in enumerate(sentences):
 print('Build model...')
 model = Sequential()
 model.add(LSTM(128, input_shape=(maxlen, len(chars))))
+model.add(Dropout(0.2))
 model.add(Dense(len(chars)))
 model.add(Activation('softmax'))
 
-optimizer = RMSprop(lr=0.01)
+optimizer = RMSprop(lr=2e-3)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
 
@@ -105,7 +106,7 @@ def on_epoch_end(epoch, logs):
 print_callback = LambdaCallback(on_epoch_end=on_epoch_end)
 
 model.fit(x, y,
-          batch_size=128,
-          epochs=20,
+          batch_size=50,
+          epochs=40,
           callbacks=[print_callback])
-model.save('model.keras')
+model.save('model3.keras')
